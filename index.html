@@ -28,11 +28,11 @@
     margin-top: 2px;
     /* 上の行との間を少し空ける */
   }
-
 </style>
 
 <h1>確定反撃チェック</h1>
 <div id="buttons"></div>
+<button id="filter"></button>
 <ul id="list"></ul>
 <script src="data.js"></script>
 
@@ -50,6 +50,8 @@
   ];
 
   const btns = {};
+  let currentChar = 'kazuya';   // 今表示しているキャラ
+  let onlyHit = false;          // true なら確定ありだけ表示
 
   function withsign(n) {
     if (n >= 0) {return '+' + n}
@@ -70,6 +72,7 @@
   }
 
   function render(key) {
+    currentChar = key;
     const list = document.getElementById('list');
     list.innerHTML = "";
 
@@ -84,6 +87,10 @@
       const ok = get_punishes(myadv);
       const li = document.createElement('li');
       let text = move.name + '(' + withsign(myadv) + 'F) : ';
+
+      if (onlyHit && ok.length === 0){
+        continue;
+      }
 
       if (ok.length > 0) {
         li.classList.add('hit');
@@ -104,6 +111,12 @@
     }
   };
 
+  function filtering(currentChar){
+    onlyHit = !onlyHit;
+    filt.classList.toggle('selected',onlyHit);
+    render(currentChar);
+  };
+
   for (const key in chars) {
     const button = document.createElement('button');
     button.textContent = chars[key].name;
@@ -111,7 +124,13 @@
     document.getElementById("buttons").appendChild(button);
     btns[key] = button;
   }
-  render('kazuya')
+
+  const filt = document.createElement('filt');
+  filt.textContent = '確定反撃だけ';
+  filt.addEventListener('click',function() {filtering(currentChar);});
+  document.getElementById('filter').appendChild(filt);
+
+  render('kazuya');
 
 
 </script>
