@@ -1,0 +1,109 @@
+<style>
+  .selected {
+    background: #2f5bd3;
+    color: white;
+  }
+
+  .hit {
+    color: green;
+    font-weight: bold;
+    background: #dcf3e8;
+  }
+
+  .safe {
+    color: gray;
+  }
+
+  .note {
+    display: block;     /* 次の行に表示する */
+    font-size: 0.85em;  /* 少し小さく */
+    font-weight: normal;/* 太字を解除 */
+    color: #b26a00;   /* オレンジ系 */
+    margin-top: 2px;    /* 上の行との間を少し空ける */
+  }
+</style>
+
+<h1>確定反撃チェック</h1>
+<div id="buttons"></div>
+<ul id="list"></ul>
+<script src="data.js"></script>
+
+
+<script>
+
+  const opts = [
+    {name: "上B", f: 5},
+    {name: "空上", f: 8},
+    {name: "空N/空前", f: 9},
+    {name: "つかみ", f: 10},
+    {name: "弱", f: 16},
+    {name: "上強", f: 17},
+    {name: "下強", f: 18},
+  ];
+
+  const btns = {};
+
+  function withsign(n) {
+    if (n >= 0) {return '+' + n}
+    else {return n}
+  }
+
+  function get_punishes(adv) {
+    const ok = [];
+    for (const opt of opts) {
+      if (opt.f < adv) {
+        ok.push(opt.name);
+      }
+      if (opt.f === adv) {
+        ok.push(opt.name + '(最速)')
+      }
+    }
+    return ok;
+  }
+
+  function render(key) {
+    const list = document.getElementById('list');
+    list.innerHTML = "";
+
+    for (const k in btns) {
+      btns[k].classList.remove('selected');
+    }
+    btns[key].classList.add('selected');
+
+
+    for (const move of chars[key].moves) {
+      const myadv = -move.adv
+      const ok = get_punishes(myadv);
+      const li = document.createElement('li');
+      let text = move.name + '(' + withsign(myadv) + 'F) : ';
+
+      if (ok.length > 0) {
+        li.classList.add('hit');
+        text += ok.join('・') + 'が確定反撃';
+      }
+      else {
+        li.classList.add('safe');
+        text += '確定反撃なし';
+      }
+      li.textContent = text;
+      if (move.note) {
+        const note = document.createElement('span');
+        note.classList.add('note');
+        note.textContent = '補足 : ' + move.note;
+        li.appendChild(note);
+      }
+      list.appendChild(li);  // id="list" の中に追加
+    }
+  };
+
+  for (const key in chars) {
+    const button = document.createElement('button');
+    button.textContent = chars[key].name;
+    button.addEventListener("click", function () {render(key);});
+    document.getElementById("buttons").appendChild(button);
+    btns[key] = button;
+  }
+  render('kazuya')
+
+
+</script>
