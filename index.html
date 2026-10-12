@@ -85,12 +85,13 @@
     for (const move of chars[key].moves) {
       const myadv = -move.adv
       const ok = get_punishes(myadv);
-      const li = document.createElement('li');
-      let text = move.name + '(' + withsign(myadv) + 'F) : ';
 
-      if (onlyHit && ok.length === 0){
+      if (onlyHit && ok.length === 0) {
         continue;
       }
+      
+      const li = document.createElement('li');
+      let text = move.name + '(' + withsign(myadv) + 'F) : ';
 
       if (ok.length > 0) {
         li.classList.add('hit');
@@ -111,9 +112,9 @@
     }
   };
 
-  function filtering(currentChar){
+  function filtering() {
     onlyHit = !onlyHit;
-    filt.classList.toggle('selected',onlyHit);
+    filt.classList.toggle('selected', onlyHit);
     render(currentChar);
   };
 
@@ -125,10 +126,9 @@
     btns[key] = button;
   }
 
-  const filt = document.createElement('filt');
+  const filt = document.getElementById('filter');
   filt.textContent = '確定反撃だけ';
-  filt.addEventListener('click',function() {filtering(currentChar);});
-  document.getElementById('filter').appendChild(filt);
+  filt.addEventListener('click', filtering);
 
   render('kazuya');
 
