@@ -17,17 +17,35 @@
   }
 
   .note {
-    display: block;
-    /* 次の行に表示する */
-    font-size: 0.85em;
-    /* 少し小さく */
-    font-weight: normal;
-    /* 太字を解除 */
-    color: #b26a00;
-    /* オレンジ系 */
-    margin-top: 2px;
-    /* 上の行との間を少し空ける */
+    display: block;       /* 次の行に表示する */
+    font-size: 0.85em;    /* 少し小さく */
+    font-weight: normal;  /* 太字を解除 */
+    color: #b26a00;     /* オレンジ系 */
+    margin-top: 2px;      /* 上の行との間を少し空ける */
   }
+
+  button {
+    font-size: 16px;            /* 文字を大きく */
+    padding: 10px 16px;         /* 内側の余白（上下 10px、左右 16px） */
+    min-height: 44px;           /* 最低でもこの高さにする */
+    border: 1px solid #ccc;
+    border-radius: 8px;         /* 角を丸く */
+    background: white;
+  }
+
+  #buttons {
+    display: flex;          /* 中の部品を横に並べる */
+    flex-wrap: wrap;        /* 入りきらなければ折り返す */
+    gap: 8px;               /* ボタン同士の間隔 */
+    margin-bottom: 8px;     /* 下の絞り込みボタンとの間隔 */
+  }
+
+  li {
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    }
+    
 </style>
 
 <h1>確定反撃チェック</h1>
@@ -89,7 +107,7 @@
       if (onlyHit && ok.length === 0) {
         continue;
       }
-      
+
       const li = document.createElement('li');
       let text = move.name + '(' + withsign(myadv) + 'F) : ';
 
