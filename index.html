@@ -33,12 +33,6 @@
     background: white;
   }
 
-  #buttons {
-    display: flex;          /* 中の部品を横に並べる */
-    flex-wrap: wrap;        /* 入りきらなければ折り返す */
-    gap: 8px;               /* ボタン同士の間隔 */
-    margin-bottom: 8px;     /* 下の絞り込みボタンとの間隔 */
-  }
 
   li {
     padding: 6px 8px;
@@ -49,11 +43,17 @@
     padding-left: 0;     /* 左の余白をなくす */
     list-style: none;    /* 行頭の「・」を消す */
     }
-    
+  
+  select {
+    font-size: 16px;
+    min-height: 44px;
+    padding: 0 8px;
+    margin-bottom: 8px;
+    }
 </style>
 
 <h1>確定反撃チェック</h1>
-<div id="buttons"></div>
+<select id="charSelect"></select>
 <button id="filter"></button>
 <ul id="list"></ul>
 <script src="data.js"></script>
@@ -71,8 +71,6 @@
     {name: "下強", f: 18},
   ];
 
-  const btns = {};
-  let currentChar = 'kazuya';   // 今表示しているキャラ
   let onlyHit = false;          // true なら確定ありだけ表示
 
   function withsign(n) {
@@ -94,15 +92,9 @@
   }
 
   function render(key) {
-    currentChar = key;
+    select.value = key;
     const list = document.getElementById('list');
     list.innerHTML = "";
-
-    for (const k in btns) {
-      btns[k].classList.remove('selected');
-    }
-    btns[key].classList.add('selected');
-
 
     for (const move of chars[key].moves) {
       const myadv = -move.adv
@@ -137,22 +129,25 @@
   function filtering() {
     onlyHit = !onlyHit;
     filt.classList.toggle('selected', onlyHit);
-    render(currentChar);
+    render(select.value);
   };
 
+  const select = document.getElementById('charSelect');
+
   for (const key in chars) {
-    const button = document.createElement('button');
-    button.textContent = chars[key].name;
-    button.addEventListener("click", function () {render(key);});
-    document.getElementById("buttons").appendChild(button);
-    btns[key] = button;
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = chars[key].name;
+    select.appendChild(option);
   }
+
+  select.addEventListener('change',function() {render(select.value);});
 
   const filt = document.getElementById('filter');
   filt.textContent = '確定反撃だけ';
   filt.addEventListener('click', filtering);
 
-  render('kazuya');
+  render('mario');
 
 
 </script>
